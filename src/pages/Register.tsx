@@ -3,7 +3,7 @@ import { Input } from "../components/common/Input";
 import { Button } from "../components/common/Button";
 import { Divider } from "../components/common/Divider";
 import { GoogleIcon } from "../components/common/GoogleIcon";
-import "../styles/Register.css";
+// import "../styles/Register.css";
 import { LeftPanel } from "../components/layout/LeftPanel";
 
 interface FormData {
@@ -18,12 +18,12 @@ export default function RegisterPage() {
     email: "",
     fullName: "",
     nin: "",
-    password: ""
+    password: "",
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -36,15 +36,17 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="register-container">
+    <div className="grid grid-cols-1 lg:grid-cols-[45%_55%] max-h-screen px-5 py-2">
       {/* Left Panel - Fixed width of 600px with peach background */}
-    <LeftPanel/>
+      <LeftPanel />
 
       {/* Right Panel - White background */}
-      <div className="right-panel">
-        <div className="right-panel-content">
-          <div className="form-container">
-            <h2 className="form-title">Create an account</h2>
+      <div className="bg-white rounded-4xl flex items-center justify-center rounded-b-4xl lg:rounded-4xl overflow-y-auto">
+        <div className="w-full max-w-130 py-3 px-12">
+          <div>
+            <h2 className="text-2xl font-bold mb-4 text-center">
+              Create an account
+            </h2>
 
             <Button variant="google" onClick={handleGoogleSignup}>
               Create account with Google
@@ -95,9 +97,11 @@ export default function RegisterPage() {
               </Button>
             </form>
 
-            <p className="login-link">
+            <p className="mt-4 text-center text-sm text-[#49475A]">
               Already have an account?{" "}
-              <a href="/login" className="login">Login</a>
+              <a href="/login" className="text-[#FF4726] text-base">
+                Login
+              </a>
             </p>
           </div>
         </div>

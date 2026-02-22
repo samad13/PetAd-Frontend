@@ -4,7 +4,7 @@ export function Divider() {
       display: "flex",
       alignItems: "center",
       gap: 16,
-      margin: "24px 0",
+      margin: "12px 0",
     }}>
       <div style={{ flex: 1, height: 1, background: "#e5e7eb" }} />
       <span style={{
@@ -12,7 +12,7 @@ export function Divider() {
         fontSize: 14,
         fontWeight: 500,
         fontFamily: "'Poppins', sans-serif",
-      }}>Or</span>
+      }}>OR</span>
       <div style={{ flex: 1, height: 1, background: "#e5e7eb" }} />
     </div>
   );
