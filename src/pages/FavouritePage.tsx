@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
 import { PetCard, type Pet } from "../components/ui/PetCard";
-import { FormSelect } from "../components/ui/formSelect";
+import { FormSelect } from "../components/ui/favouriteCategorySelect";
 
 // Import images provided by user
 import dogImg from "../assets/dog.png";
@@ -128,11 +128,9 @@ export default function FavouritePage() {
                         <div className="w-[160px] relative">
                             <FormSelect
                                 id="category-filter"
-                                label=""
                                 options={CATEGORY_OPTIONS}
                                 value={categoryFilter}
                                 onChange={(e) => setCategoryFilter(e.target.value)}
-                                className="!py-2.5" // Override py padding to match inputs
                             />
                             {/* Adjust styling of FormSelect specifically for this context to look like the design */}
                         </div>
