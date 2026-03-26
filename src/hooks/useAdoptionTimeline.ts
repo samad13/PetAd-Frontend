@@ -1,9 +1,9 @@
 import { useApiQuery } from "./useApiQuery";
 import { adoptionService } from "../api/adoptionService";
-import type { TimelineEntry } from "../types/adoption";
+import type { AdoptionTimelineEntry } from "../types/adoption";
 
 export function useAdoptionTimeline(adoptionId: string) {
-  const { data, isLoading, isError } = useApiQuery<TimelineEntry[]>(
+  const { data, isLoading, isError } = useApiQuery<AdoptionTimelineEntry[]>(
     ["adoption", adoptionId, "timeline"],
     () => adoptionService.getTimeline(adoptionId)
   );

@@ -15,6 +15,7 @@ import PetListingDetailsPage from "./pages/PetlistingdetailsPage";
 import EditAdoptionListing from "./pages/EditAdoptionListing";
 import ListingDetailsPage from "./pages/ListingDetailsPage";
 import { SettlementSummaryPage } from "./pages/SettlementSummaryPage";
+import AdoptionTimelinePage from "./pages/AdoptionTimelinePage";
 import ModalPreview from "./pages/ModalPreview";
 import StatusPollingDemo from "./pages/StatusPollingDemo";
 
@@ -41,6 +42,7 @@ function App() {
         <Route path="/my-listings/:id" element={<ListingDetailsPage />} />
         <Route path="/notifications" element={<NotificationPage />} />
         <Route path="/adoption/:adoptionId/settlement" element={<SettlementSummaryPage />} />
+        <Route path="/adoption/:adoptionId/timeline" element={<AdoptionTimelinePage />} />
 
         {/* Preview Routes */}
         <Route path="/preview-modal" element={<ModalPreview />} />
