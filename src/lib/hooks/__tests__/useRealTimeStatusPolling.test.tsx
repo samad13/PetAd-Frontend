@@ -100,7 +100,7 @@ describe("useRealTimeStatusPolling", () => {
 
   it("sets statusChanged to true for 3 seconds after status change", async () => {
     const queryClient = createTestQueryClient();
-    const mockGetDetails = vi
+    vi
       .spyOn(adoptionService.adoptionService, "getDetails")
       .mockResolvedValueOnce(mockAdoptionData)
       .mockResolvedValueOnce({
@@ -219,7 +219,7 @@ describe("useRealTimeStatusPolling", () => {
 
   it("returns correct data structure", async () => {
     const queryClient = createTestQueryClient();
-    const mockGetDetails = vi
+    vi
       .spyOn(adoptionService.adoptionService, "getDetails")
       .mockResolvedValue(mockAdoptionData);
 
