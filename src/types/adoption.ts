@@ -13,3 +13,13 @@ export interface AdoptionTimelineEntry {
   message: string;
   actor?: string;
 }
+
+export interface TimelineEntry {
+  fromStatus: AdoptionStatus | null;
+  toStatus: AdoptionStatus;
+  actor: string;
+  reason?: string;
+  sdkTxHash?: string;
+  stellarExplorerUrl?: string;
+  timestamp: string;
+}
