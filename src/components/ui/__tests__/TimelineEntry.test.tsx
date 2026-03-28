@@ -45,7 +45,7 @@ describe("TimelineEntry", () => {
     vi.useFakeTimers();
     vi.setSystemTime(new Date("2025-03-26T11:00:00Z"));
 
-    vi.spyOn(Date.prototype, "toLocaleString").mockImplementation(function () {
+    vi.spyOn(Date.prototype, "toLocaleString").mockImplementation(function (this: any) {
       return new Intl.DateTimeFormat("en-US", {
         timeZone: "UTC",
         year: "numeric",
