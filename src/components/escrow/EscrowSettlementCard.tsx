@@ -76,7 +76,7 @@ export function EscrowSettlementCard({ escrowId }: EscrowSettlementCardProps) {
     );
   }
 
-  const balance = (data as Record<string, unknown>)?.balance ?? "0";
+  const balance = String((data as Record<string, unknown>)?.balance ?? "0");
 
   return (
     <div className="group relative w-full max-w-md overflow-hidden rounded-3xl border border-slate-200 bg-white p-6 shadow-xl transition-all duration-500 hover:shadow-2xl">

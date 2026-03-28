@@ -30,7 +30,7 @@ export function useRealTimeStatusPolling(
       case "adoption":
         return adoptionService.getDetails(entityId);
       case "custody":
-        return custodyService.getDetails(entityId);
+        return custodyService.getDetails(entityId) as Promise<AdoptionDetails | CustodyDetails>;
     }
   };
 
