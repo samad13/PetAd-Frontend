@@ -29,7 +29,7 @@ export const documentService = {
 
             // Set standard headers
             xhr.setRequestHeader("Accept", "application/json");
-            
+
             const token = getToken();
             if (token) {
                 xhr.setRequestHeader("Authorization", `Bearer ${token}`);
@@ -54,9 +54,9 @@ export const documentService = {
                     try {
                         errorData = JSON.parse(xhr.responseText);
                         if (errorData?.message) message = errorData.message;
-                    } catch (e) {
-                         // non-json response
-                         errorData = xhr.responseText;
+                    } catch {
+                        // non-json response
+                        errorData = xhr.responseText;
                     }
 
                     if (xhr.status === 422) {
