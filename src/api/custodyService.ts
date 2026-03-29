@@ -14,12 +14,6 @@ export const custodyService = {
   },
 
   async getTimeline(custodyId: string): Promise<CustodyTimelineEvent[]> {
-<<<<<<< HEAD
     return apiClient.get<CustodyTimelineEvent[]>(`/custody/${custodyId}/timeline`);
-=======
-    return apiClient.get<CustodyTimelineEvent[]>(
-      `/custody/${custodyId}/timeline`
-    );
->>>>>>> upstream/main
   },
 };
