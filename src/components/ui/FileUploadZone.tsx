@@ -1,144 +1,137 @@
-import { AlertCircle, Check, Loader2, X } from 'lucide-react';
-
-export type UploadedFileStatus = 'uploading' | 'success' | 'failed';
-
-export interface UploadedFile {
-  file: File;
-  status: UploadedFileStatus;
-  progress: number;
-  error?: string;
-}
+import { useState, useRef, type DragEvent, type ChangeEvent } from "react";
 
 interface FileUploadZoneProps {
-  files: UploadedFile[];
-  onRemove: (file: UploadedFile, index: number) => void;
-  emptyLabel?: string;
-}
-
-const fileSizeFormatter = new Intl.NumberFormat(undefined, {
-  maximumFractionDigits: 1,
-});
-
-function clampProgress(progress: number): number {
-  return Math.min(Math.max(progress, 0), 100);
-}
-
-function formatFileSize(bytes: number): string {
-  if (bytes < 1024) {
-    return `${fileSizeFormatter.format(bytes)} B`;
-  }
-
-  const units = ['KB', 'MB', 'GB', 'TB'];
-  let value = bytes / 1024;
-  let unitIndex = 0;
-
-  while (value >= 1024 && unitIndex < units.length - 1) {
-    value /= 1024;
-    unitIndex += 1;
-  }
-
-  return `${fileSizeFormatter.format(value)} ${units[unitIndex]}`;
+    id: string;
+    label?: string;
+    accept?: string;
+    onChange: (file: File | null) => void;
+    selectedFile: File | null;
+    error?: string;
 }
 
 export function FileUploadZone({
-  files,
-  onRemove,
-  emptyLabel = 'No files added yet.',
+    id,
+    label,
+    accept = "image/*,.pdf,.doc,.docx",
+    onChange,
+    selectedFile,
+    error,
 }: FileUploadZoneProps) {
-  if (files.length === 0) {
+    const hiddenFileInput = useRef<HTMLInputElement>(null);
+    const [isDragOver, setIsDragOver] = useState(false);
+
+    const handleClick = () => {
+        hiddenFileInput.current?.click();
+    };
+
+    const handleFile = (file: File | undefined) => {
+        if (!file) return;
+        onChange(file);
+    };
+
+    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+        const fileUploaded = e.target.files?.[0];
+        handleFile(fileUploaded);
+        // Reset input value to allow selecting the same file again if removed
+        if (e.target) {
+            e.target.value = '';
+        }
+    };
+
+    const handleDragOver = (e: DragEvent<HTMLDivElement>) => {
+        e.preventDefault();
+        e.stopPropagation();
+        setIsDragOver(true);
+    };
+
+    const handleDragLeave = (e: DragEvent<HTMLDivElement>) => {
+        e.preventDefault();
+        e.stopPropagation();
+        setIsDragOver(false);
+    };
+
+    const handleDrop = (e: DragEvent<HTMLDivElement>) => {
+        e.preventDefault();
+        e.stopPropagation();
+        setIsDragOver(false);
+
+        if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+            handleFile(e.dataTransfer.files[0]);
+            e.dataTransfer.clearData();
+        }
+    };
+
     return (
-      <div className="rounded-2xl border border-dashed border-gray-200 bg-gray-50 px-4 py-6 text-center text-sm text-gray-500">
-        {emptyLabel}
-      </div>
-    );
-  }
+        <div className="flex flex-col gap-1.5 w-full">
+            {label && (
+                <label htmlFor={id} className="text-[13px] font-medium text-gray-700 mb-1">
+                    {label}
+                </label>
+            )}
 
-  return (
-    <ul className="space-y-3" aria-label="Uploaded files">
-      {files.map((uploadedFile, index) => {
-        const progress = clampProgress(uploadedFile.progress);
-        const isUploading = uploadedFile.status === 'uploading';
-        const isSuccess = uploadedFile.status === 'success';
-        const isFailed = uploadedFile.status === 'failed';
-
-        return (
-          <li
-            key={`${uploadedFile.file.name}-${uploadedFile.file.size}-${index}`}
-            className="rounded-2xl border border-gray-200 bg-white p-4 shadow-sm"
-          >
-            <div className="flex items-start gap-3">
-              <div className="min-w-0 flex-1">
-                <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
-                  <p className="truncate text-sm font-semibold text-gray-900">
-                    {uploadedFile.file.name}
-                  </p>
-                  <span className="text-xs text-gray-500">
-                    {formatFileSize(uploadedFile.file.size)}
-                  </span>
+            <div
+                onClick={handleClick}
+                onDragOver={handleDragOver}
+                onDragLeave={handleDragLeave}
+                onDrop={handleDrop}
+                className={`flex flex-col items-center justify-center w-full cursor-pointer rounded-xl border-2 border-dashed bg-white px-6 py-10 outline-none transition-all
+          ${
+              isDragOver
+                  ? "border-[#0D162B] bg-gray-50"
+                  : error
+                  ? "border-red-400 bg-red-50/10"
+                  : "border-gray-200 hover:border-gray-300"
+          }
+        `}
+            >
+                <div className="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center mb-3 text-gray-500">
+                    <svg
+                        className="w-6 h-6"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                    >
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z" />
+                    </svg>
                 </div>
 
-                <div className="mt-2 flex items-center gap-2 text-xs font-medium">
-                  {isUploading ? (
-                    <>
-                      <Loader2
-                        className="h-4 w-4 animate-spin text-[#0D1B2A]"
-                        aria-hidden="true"
-                      />
-                      <span className="text-gray-600">Uploading</span>
-                    </>
-                  ) : null}
-
-                  {isSuccess ? (
-                    <>
-                      <Check className="h-4 w-4 text-green-600" aria-hidden="true" />
-                      <span className="text-green-700">Uploaded</span>
-                    </>
-                  ) : null}
-
-                  {isFailed ? (
-                    <>
-                      <AlertCircle className="h-4 w-4 text-red-600" aria-hidden="true" />
-                      <span className="text-red-700">Upload failed</span>
-                    </>
-                  ) : null}
+                <div className="text-center">
+                    <span className="text-[14px] font-medium text-[#E84D2A] hover:underline">
+                        Click to upload
+                    </span>
+                    <span className="text-[14px] text-gray-500">
+                        {" "}or drag and drop
+                    </span>
                 </div>
-              </div>
+                
+                {selectedFile ? (
+                    <p className="mt-2 text-[13px] font-medium text-gray-900 border border-gray-200 rounded-md px-3 py-1.5 bg-gray-50 flex items-center gap-2">
+                        <svg className="w-4 h-4 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                        </svg>
+                        <span className="truncate max-w-[200px]">{selectedFile.name}</span>
+                    </p>
+                ) : (
+                    <p className="text-[12px] text-gray-400 mt-1">SVG, PNG, JPG or PDF (max. 10MB)</p>
+                )}
 
-              <button
-                type="button"
-                onClick={() => onRemove(uploadedFile, index)}
-                className="rounded-full p-1.5 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#0D1B2A]/20"
-                aria-label={`Remove ${uploadedFile.file.name}`}
-              >
-                <X className="h-4 w-4" aria-hidden="true" />
-              </button>
+                <input
+                    id={id}
+                    type="file"
+                    accept={accept}
+                    ref={hiddenFileInput}
+                    onChange={handleChange}
+                    className="hidden"
+                    aria-invalid={!!error}
+                />
             </div>
 
-            {isUploading ? (
-              <div className="mt-3 space-y-1.5">
-                <div
-                  className="h-2 w-full overflow-hidden rounded-full bg-gray-100"
-                  role="progressbar"
-                  aria-label={`Upload progress for ${uploadedFile.file.name}`}
-                  aria-valuenow={progress}
-                  aria-valuemin={0}
-                  aria-valuemax={100}
-                >
-                  <div
-                    className="h-full rounded-full bg-[#E84D2A] transition-[width] duration-300 ease-out motion-reduce:transition-none"
-                    style={{ width: `${progress}%` }}
-                  />
-                </div>
-                <p className="text-right text-xs text-gray-500">{progress}%</p>
-              </div>
-            ) : null}
-
-            {isFailed && uploadedFile.error ? (
-              <p className="mt-3 text-xs text-red-600">{uploadedFile.error}</p>
-            ) : null}
-          </li>
-        );
-      })}
-    </ul>
-  );
+            {error && (
+                <p className="text-xs text-red-500 mt-0.5">
+                    {error}
+                </p>
+            )}
+        </div>
+    );
 }
