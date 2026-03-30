@@ -1,4 +1,3 @@
-import React from 'react';
 import type { DisputeStatus } from '../../types/dispute';
 
 interface DisputeSLABadgeProps {
